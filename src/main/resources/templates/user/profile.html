@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Welcome!</title>
+    <style>
+        .container-fluid {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $.ajax({
+            url:"/user",
+            type:"get",
+            data: {},
+            success: (function (data) {
+                let user = {
+                    id: data.userId,
+                    name: data.name,
+                    login: data.login,
+                    password: data.password,
+                    roles: data.roles,
+                };
+                drawPage(user);
+            })
+        });
+
+        $("#user-panel-switch")[0].click();
+    });
+
+    //извлечение полей из формы
+    $(document).on('click', '#send', function () {
+        let userId = $("#id-input").val();
+        let userName = $("#login-input").val();
+        let userLogin = $("#name-input").val();
+        let userPassword = $("#password-input").val();
+
+        //создание юзера для отправки
+        let sendUser = {
+            userId: userId,
+            name: userName,
+            login: userLogin,
+            password: userPassword,
+            roles: ["user"]
+        };
+
+        //put запрос на сервер
+        $.ajax({
+            url: "/user",
+            type: "PUT",
+            dataType: "json",
+            data: JSON.stringify(sendUser),
+            contentType: "application/json",
+            success: (function (data) {
+                let user = {
+                    id: data.userId,
+                    name: data.name,
+                    login: data.login,
+                    password: data.password,
+                    roles: data.roles,
+                };
+                location.reload();
+                drawPage(user);
+            })
+        })
+
+    });
+
+    //отрисовка страницы
+    function drawPage(user) {
+        //для вывода данных на страницу юзера
+        let name1 = document.getElementById('user-name-1');
+        name1.innerHTML = user.name;
+        let name2 = document.getElementById('user-name-2');
+        name2.innerHTML = user.name;
+        let login = document.getElementById('user-login');
+        login.innerHTML = user.login;
+        let pass = document.getElementById('user-pass');
+        pass.innerHTML = user.password;
+
+        //для связки модального окна и кнопки
+        let modal = document.getElementById('user-modal');
+        modal.setAttribute("th:data-target", '#' + 'modal' + user.id);
+        modal.setAttribute("data-target", '#' + 'modal' + user.id);
+        let modalTab = document.getElementById('modal-tab');
+        modalTab.setAttribute("th:id", 'modal' + user.id);
+        modalTab.setAttribute("id", 'modal' + user.id);
+
+        //для вывода данных юзера в модальной форме
+        let idInput = document.getElementById('id-input');
+        idInput.setAttribute("value", user.id);
+        let loginInput = document.getElementById('login-input');
+        loginInput.setAttribute("value", user.login);
+        let nameInput = document.getElementById('name-input');
+        nameInput.setAttribute("value", user.name);
+        let passwordInput = document.getElementById('password-input');
+        passwordInput.setAttribute("value", user.password);
+    }
+</script>
+
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Preproject</a>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" th:href="@{/logout}" th:method="get">Sign out</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav nav-tabs flex-column">
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-block" id="user-panel-switch" data-toggle="tab" href="#adminPanel">
+                            User
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="tab-content">
+        <div id="adminPanel" class="tab-pane fade">
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <h1>Hello <span id="user-name-1">User!</span></h1>
+                <p>Your data:</p>
+                <p>Login: <span id="user-login">login</span></p>
+                <p>Password: <span id="user-pass">password</span></p>
+                <p>Name: <span id="user-name-2">name</span></p>
+                <button type="button" id="user-modal" class="btn btn-primary" data-toggle="modal" th:data-target="'#modal-tab'">Edit</button>
+            </main>
+        </div>
+    </div>
+
+
+    <!-- modal-->
+    <div class="modal fade" th:id="'modal-tab'" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <label class="col-3 control-label" for="id-input">ID</label>
+                    <div class="col-9">
+                        <input type="text" class="form-control" id="id-input" value="userId" th:name="id"/>
+                    </div>
+
+                    <label class="col-3 control-label" for="login-input">login</label>
+                    <div class="col-9">
+                        <input type="text" class="form-control" id="login-input" value="userLogin" th:name="login"/>
+                    </div>
+
+                    <label class="col-3 control-label" for="name-input">name</label>
+                    <div class="col-9">
+                        <input type="text" class="form-control" id="name-input" value="userName" th:name="name"/>
+                    </div>
+
+                    <label class="col-3 control-label" for="password-input">password</label>
+                    <div class="col-9">
+                        <input type="text" class="form-control" id="password-input" value="userPass" th:name="password"/>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="close-button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="send">Edit user</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
