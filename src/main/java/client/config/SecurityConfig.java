@@ -17,18 +17,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Qualifier("userDetailsServiceImpl")
-    @Autowired
-    private UserDetailsService userDetailsService;
-
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasAuthority("admin")
-                .antMatchers("/adminProfile").hasAuthority("admin")
-                .antMatchers("/user/**").hasAuthority("user")
+                .antMatchers("/admin/**").hasAuthority("ROLE_admin")
+                .antMatchers("/adminProfile").hasAuthority("ROLE_admin")
+                .antMatchers("/user/**").hasAuthority("ROLE_user")
                 .antMatchers("/login*").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -52,6 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        authenticationManagerBuilder.inMemoryAuthentication()
+                .withUser("User").password("$2a$10$Bi0Ubblls719.yLmRhvB5e6l2qQ265Zm8yyNX8DUcQtVVxSoAIjJW").roles("user").and()
+                .withUser("Admin").password("$2a$10$U7Aj7fe.6DAYsn/tIjtCX.6.0DYW.WPoiDSM5ZX9kMlX.YjiQcLEi").roles("admin");
     }
 }

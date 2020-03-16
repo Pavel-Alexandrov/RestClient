@@ -24,9 +24,9 @@ public class AuthHandler implements AuthenticationSuccessHandler {
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("admin")) {
+            if (grantedAuthority.getAuthority().equals("ROLE_admin")) {
                 isAdmin = true;
-            } else if (grantedAuthority.getAuthority().equals("user")) {
+            } else if (grantedAuthority.getAuthority().equals("ROLE_user")) {
                 isUser = true;
             }
         }
