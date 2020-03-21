@@ -128,6 +128,7 @@
         $(userTable).empty();
         $.each(data, function (index, value) {
             value = JSON.stringify(value);
+            // alert(value);
             let user = JSON.parse(value);
 
             //связка модальных окон с таблицей

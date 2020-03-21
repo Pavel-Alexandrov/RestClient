@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.inMemoryAuthentication()
-                .withUser("User").password("$2a$10$Bi0Ubblls719.yLmRhvB5e6l2qQ265Zm8yyNX8DUcQtVVxSoAIjJW").roles("user").and()
-                .withUser("Admin").password("$2a$10$U7Aj7fe.6DAYsn/tIjtCX.6.0DYW.WPoiDSM5ZX9kMlX.YjiQcLEi").roles("admin");
+                .withUser("user").password("$2a$10$HKmbN7R9f0/fXurDQD0aS.Nlex46kxtQOfRP94ZFfKlIVRN426IL.").roles("user").and()
+                .withUser("admin").password("$2a$10$U7Aj7fe.6DAYsn/tIjtCX.6.0DYW.WPoiDSM5ZX9kMlX.YjiQcLEi").roles("admin");
     }
 }

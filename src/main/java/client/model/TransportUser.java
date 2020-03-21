@@ -13,6 +13,8 @@ public class TransportUser {
     private String password;
     private Set<String> roles;
 
+    public TransportUser() {}
+
     public TransportUser(int userId, String name, String login, String password, Set<String> roles) {
         this.userId = userId;
         this.name = name;
