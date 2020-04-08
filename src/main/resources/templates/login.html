@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="google-signin-client_id" content="760838010289-betu9j9su1m184i77k2pl52pr6mol0nr.apps.googleusercontent.com">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
     <style>
         html,
         body {
@@ -55,6 +55,72 @@
 </head>
 
 <body>
+<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    // $(document).on('click', '#google-sign-in', function (googleUser) {
+    //     let id_token = googleUser.getAuthResponse().id_token;
+    //     let id_token = "121354";
+    //     let xhr = new XMLHttpRequest();
+    //     xhr.open('POST', 'http://localhost:9090/login/tokensignin');
+    //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    //     xhr.send('idtoken=' + id_token);
+    // });
+
+    let id_token;
+
+    function success() {
+        alert('success');
+    }
+
+    function fail() {
+        alert('fail');
+    }
+
+    function init() {
+        gapi.load('auth2', function() {
+            // let googleAuth = gapi.auth2.init('760838010289-betu9j9su1m184i77k2pl52pr6mol0nr.apps.googleusercontent.com');
+            // googleAuth.then(success(), fail());
+            let googleAuth = gapi.auth2.getAuthInstance();
+            googleUser = googleAuth.currentUser.get();
+        });
+    }
+
+    function onSignIn(googleUser) {
+        id_token = googleUser.getAuthResponse().id_token;
+        // alert(id_token);
+    }
+
+    // $(document).on('click', '#google-sign-in', function () {
+    //     let xhr = new XMLHttpRequest();
+    //     xhr.open('POST', 'http://localhost:9090/login/tokensignin');
+    //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    //     id_token = googleUser.getAuthResponse().id_token;;
+    //     xhr.send(id_token);
+    // });
+
+    $(document).on('click', '#google-sign-in', function () {
+        $.ajax({
+            url: "http://localhost:9090/login/tokensignin",
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(googleUser.getAuthResponse().id_token),
+            contentType: "application/json",
+            success: (function (data) {
+                $("#google-sign-in-button")[0].click();
+
+            }),
+            error: function (data) {
+                $("#google-sign-in-button")[0].click();
+            }
+        })
+    });
+
+</script>
 
 <form class="form-signin" th:action="@{/j_spring_security_check}" method="post">
     <h1 class="h3 mb-3 font-weight-normal"> <strong>Please sign in</strong></h1>
@@ -64,6 +130,11 @@
     <input th:type="password" th:name="password" id="inputPassword" class="form-control" placeholder="Password" required>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 </form>
+
+<!--кнопка входа в гугл-->
+<div id="google-sign-in" class="g-signin2" data-onsuccess="onSignIn"></div>
+
+<a href="/user/home" id="google-sign-in-button" hidden></a>
 
 </body>
 </html>
