@@ -40,13 +40,6 @@ public class PageController {
     @Autowired
     public AuthenticationManager authManager;
 
-
-//    //вход через google
-//    @RequestMapping(value = "/login/tokensignin", method = RequestMethod.POST)
-//    public String googleSignIn(@RequestBody String idTokenString) throws Exception {
-//        return "/user/profile";
-//    }
-
     //вход через google
     @RequestMapping(value = "/login/tokensignin", method = RequestMethod.POST)
     public String googleSignIn(@RequestBody String idTokenString) throws Exception {
@@ -84,8 +77,7 @@ public class PageController {
             ResponseEntity<TransportUser[]> response = restTemplate.exchange("http://localhost:8080/admin",
                     HttpMethod.POST, entity, TransportUser[].class);
 
-//            authenticationManagerBuilder.inMemoryAuthentication()
-//                    .withUser(newUser.getLogin()).password(newUser.getPassword()).roles("ROLE_user"); // ошибка
+
             UsernamePasswordAuthenticationToken authReq
                     = new UsernamePasswordAuthenticationToken(newUser.getLogin(), newUser.getPassword());
             Authentication auth = authManager.authenticate(authReq);

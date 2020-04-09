@@ -62,15 +62,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
-    // $(document).on('click', '#google-sign-in', function (googleUser) {
-    //     let id_token = googleUser.getAuthResponse().id_token;
-    //     let id_token = "121354";
-    //     let xhr = new XMLHttpRequest();
-    //     xhr.open('POST', 'http://localhost:9090/login/tokensignin');
-    //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    //     xhr.send('idtoken=' + id_token);
-    // });
-
     let id_token;
 
     function success() {
@@ -94,14 +85,6 @@
         id_token = googleUser.getAuthResponse().id_token;
         // alert(id_token);
     }
-
-    // $(document).on('click', '#google-sign-in', function () {
-    //     let xhr = new XMLHttpRequest();
-    //     xhr.open('POST', 'http://localhost:9090/login/tokensignin');
-    //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    //     id_token = googleUser.getAuthResponse().id_token;;
-    //     xhr.send(id_token);
-    // });
 
     $(document).on('click', '#google-sign-in', function () {
         $.ajax({
@@ -134,6 +117,7 @@
 <!--кнопка входа в гугл-->
 <div id="google-sign-in" class="g-signin2" data-onsuccess="onSignIn"></div>
 
+<!--скрытая кнопка-костыль для перехода по гуглу-->
 <a href="/user/home" id="google-sign-in-button" hidden></a>
 
 </body>
